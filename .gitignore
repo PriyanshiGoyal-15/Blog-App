@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local scripts
+check_blogs.js
+check_post.js
+fix_index.js
+repro_error.js
