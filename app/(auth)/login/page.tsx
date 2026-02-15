@@ -38,7 +38,7 @@ export default function Login() {
       if (data.role === "admin") {
         router.push("/dashboard");
       } else {
-        router.push("/blogs");
+        router.push("/");
       }
     } catch (err) {
       setError("Network error");
