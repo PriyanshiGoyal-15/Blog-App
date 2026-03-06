@@ -40,9 +40,9 @@ export default function Login() {
       await login();
 
       if (data.role === "admin") {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
       } else {
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (err) {
       setError("Network error");
