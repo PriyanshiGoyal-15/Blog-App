@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-white/5 px-6 py-4 mb-8">
+      <nav className={`sticky top-0 border-b border-white/5 px-6 py-4 mb-8 ${isMenuOpen ? "z-70" : "z-50"}`}>
         {/* Background Blur Layer */}
         <div className="absolute inset-0 bg-background/80 backdrop-blur-md -z-10" />
 
@@ -107,7 +107,7 @@ export default function Navbar() {
 
           {/* Mobile: Hamburger Button */}
           <button
-            className="md:hidden z-50 relative p-2 text-zinc-400 hover:text-white"
+            className="md:hidden z-80 relative p-2 text-zinc-400 hover:text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
@@ -125,7 +125,7 @@ export default function Navbar() {
 
       {/* Mobile: Menu Overlay (Outside nav structure visually, but inside logically. Position fixed should work better now) */}
       {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/95 z-50 flex flex-col pt-32 px-6 md:hidden overflow-y-auto">
+        <div className="fixed inset-0 bg-black/95 z-60 flex flex-col pt-32 px-6 md:hidden overflow-y-auto">
           {/* Close button area is handled by the nav button which is z-50.
                  Wait, if overlay is z-60, it covers the nav button (z-50).
                  We need the button to be clickable. */}

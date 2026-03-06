@@ -11,8 +11,17 @@ export default function Register() {
     password: "",
   });
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setError("");
+
+    if (!form.name.trim()) {
+      setError("Name cannot be empty or just whitespace");
+      return;
+    }
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify(form),
@@ -30,6 +39,12 @@ export default function Register() {
       <form onSubmit={handleSubmit} className="p-8 bg-zinc-900/50 border border-white/5 backdrop-blur-xl rounded-2xl w-full max-w-md shadow-2xl">
         <h2 className="text-3xl font-bold mb-2 text-white text-center tracking-tight">Create Account</h2>
         <p className="text-zinc-400 text-center mb-8 text-sm">Join the community and start writing.</p>
+
+        {error && (
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm text-center">
+            {error}
+          </div>
+        )}
 
         <div className="space-y-4">
           <input

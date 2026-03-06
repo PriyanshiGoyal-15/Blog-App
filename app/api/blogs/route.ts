@@ -5,16 +5,38 @@ import "@/app/models/User"; // Ensure User model is registered
 import { verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
 
-// GET - Get all blogs
-export async function GET() {
+// GET - Get all blogs with pagination and search
+export async function GET(req: Request) {
   try {
     await connectDB();
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "9");
+    const search = searchParams.get("search") || "";
+    const skip = (page - 1) * limit;
 
-    const blogs = await Blog.find()
+    const query = search
+      ? { title: { $regex: search, $options: "i" } }
+      : {};
+
+    const blogs = await Blog.find(query)
       .populate("author", "name email")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
-    return NextResponse.json(blogs);
+    const total = await Blog.countDocuments(query);
+
+    return NextResponse.json({
+      blogs,
+      pagination: {
+        total,
+        page,
+        limit,
+        pages: Math.ceil(total / limit),
+        hasMore: skip + blogs.length < total
+      }
+    });
   } catch (error: any) {
     console.error("GET /api/blogs Error:", error);
     return NextResponse.json({ message: "Server Error", error: error.message }, { status: 500 });

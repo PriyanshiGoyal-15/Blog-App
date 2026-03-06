@@ -8,6 +8,10 @@ export async function POST(req: Request) {
     await connectDB();
     const { name, email, password } = await req.json();
 
+    if (!name || !name.trim()) {
+      return NextResponse.json({ error: "Name is required and cannot be whitespace" }, { status: 400 });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ error: "User already exists" }, { status: 400 });
