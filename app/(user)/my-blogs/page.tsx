@@ -10,13 +10,9 @@ export default function MyBlogsPage() {
     useEffect(() => {
         const fetchMyBlogs = async () => {
             try {
-                // First get user
                 const userRes = await fetch("/api/auth/me");
                 if (!userRes.ok) return;
                 const userData = await userRes.json();
-
-                // Then fetch all blogs and filter (or use a dedicated query parameter if API supported it)
-                // Ideally backend should have /api/blogs/mine, but filtering client side for now as per existing patterns
                 const res = await fetch("/api/blogs");
                 const data = await res.json();
 
@@ -32,7 +28,13 @@ export default function MyBlogsPage() {
         fetchMyBlogs();
     }, []);
 
-    if (loading) return <div className="text-center text-white p-10">Loading your stories...</div>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-7xl mx-auto p-8">
@@ -72,7 +74,7 @@ export default function MyBlogsPage() {
                                 )}
                             </Link>
 
-                            <div className="p-6 flex flex-col flex-grow">
+                            <div className="p-6 flex flex-col grow">
                                 <Link href={`/blogs/${blog._id}`}>
                                     <h2 className="text-xl font-bold mb-3 text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
                                         {blog.title}

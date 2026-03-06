@@ -4,27 +4,15 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const path = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [user, setUser] = useState<{ name: string } | null>(null);
+  const { user, logout } = useAuth();
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        }
-      } catch (e) { }
-    };
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     setSearch(searchParams.get("search") || "");
@@ -98,7 +86,7 @@ export default function Navbar() {
                     try {
                       await fetch("/api/auth/logout", { method: "POST" });
                       document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-                      // Force a hard reload or redirect to clear state
+                      await logout();
                       window.location.href = "/login";
                     } catch (err) {
                       console.error("Logout failed", err);
@@ -182,6 +170,7 @@ export default function Navbar() {
                       try {
                         await fetch("/api/auth/logout", { method: "POST" });
                         document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+                        await logout();
                         window.location.href = "/login";
                       } catch (e) { }
                     }}

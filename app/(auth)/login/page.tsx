@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Login() {
   const router = useRouter();
+  const { login } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -34,6 +36,8 @@ export default function Login() {
         setLoading(false);
         return;
       }
+
+      await login();
 
       if (data.role === "admin") {
         router.push("/dashboard");
